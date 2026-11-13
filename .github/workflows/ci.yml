@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  go-backend:
+    name: Go Engine (Unit, Race Detector & Self-Test)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go 1.22
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Verify Go formatting and vet
+        run: |
+          test -z "$(gofmt -l .)"
+          go vet ./...
+
+      - name: Run Unit & Concurrency Race Tests
+        run: go test -v -race ./...
+
+      - name: Run End-to-End CLI Self-Test
+        run: go run ./cmd/aegisgate selftest
+
+  web-inspector:
+    name: TypeScript & React Web Inspector
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install and Typecheck Web Inspector
+        working-directory: ./web
+        run: |
+          npm ci
+          npm run typecheck
+          npm run build
