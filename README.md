@@ -127,14 +127,14 @@ curl -i -X POST http://localhost:8080/v1/payments/authorize \
 
 ---
 
-## Microbenchmarks (Apple Silicon M-Series)
+## Microbenchmarks (Apple Silicon M4)
 
 Run `make bench` (`go test -bench=. -benchmem ./internal/...`) to reproduce:
 
 | Benchmark | Operations / Sec | Latency (`ns/op`) | Throughput | Allocations |
 | :--- | :--- | :--- | :--- | :--- |
-| `BenchmarkCASPutDeduplicated` | ~1,950,000 ops/sec | ~610 ns/op | ~265 MB/s | 3 allocs/op |
-| `BenchmarkCASGetHotLRU` | ~3,100,000 ops/sec | ~385 ns/op | — | 2 allocs/op |
+| `BenchmarkCASPutDeduplicated-10` | ~2,917,000 ops/sec | `342.8 ns/op` | `475.49 MB/s` | `480 B/op` (4 allocs/op) |
+| `BenchmarkCASGetHotLRU-10` | ~14,630,000 ops/sec | `68.35 ns/op` | — | `64 B/op` (1 alloc/op) |
 
 ---
 
