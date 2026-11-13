@@ -353,8 +353,8 @@ func (s *WALStore) indexRecord(rec TraceRecord) {
 	s.records = append(s.records, rec)
 	s.byID[rec.ID] = idx
 
-	// Index golden records (RECORD or PASSTHROUGH with 2xx/3xx status and no injected chaos)
-	if (rec.Mode == ModeRecord || rec.Mode == ModePassthrough) && rec.ChaosInjected == "" && rec.StatusCode >= 200 && rec.StatusCode < 400 && rec.Fingerprint != "" {
+	// Index golden records (RECORD or PASSTHROUGH with 2xx/3xx status, no injected chaos, and no contract drift)
+	if isGoldenBaseline(rec) {
 		s.byFingerprint[rec.Fingerprint] = idx
 	}
 }
@@ -364,10 +364,18 @@ func (s *WALStore) rebuildIndexesLocked() {
 	s.byFingerprint = make(map[string]int, len(s.records)/2)
 	for i, rec := range s.records {
 		s.byID[rec.ID] = i
-		if (rec.Mode == ModeRecord || rec.Mode == ModePassthrough) && rec.ChaosInjected == "" && rec.StatusCode >= 200 && rec.StatusCode < 400 && rec.Fingerprint != "" {
+		if isGoldenBaseline(rec) {
 			s.byFingerprint[rec.Fingerprint] = i
 		}
 	}
+}
+
+func isGoldenBaseline(rec TraceRecord) bool {
+	return (rec.Mode == ModeRecord || rec.Mode == ModePassthrough) &&
+		rec.ChaosInjected == "" &&
+		rec.StatusCode >= 200 && rec.StatusCode < 400 &&
+		rec.DiffBreaking == 0 && rec.DiffNonBreaking == 0 &&
+		rec.Fingerprint != ""
 }
 
 func (s *WALStore) recoverFromWAL() error {
