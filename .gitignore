@@ -1,0 +1,40 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+aegisgate
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.txt
+coverage.html
+
+# Go workspace file
+go.work
+
+# Local data and CAS storage
+.aegisgate/
+*.db
+*.db-shm
+*.db-wal
+*.wal
+
+# Frontend dependencies and build artifacts
+web/node_modules/
+web/dist/
+web/.vite/
+*.tsbuildinfo
+
+# Environment and editor files
+.env
+.env.local
+.DS_Store
+.idea/
+.vscode/
