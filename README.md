@@ -14,6 +14,8 @@ Modern microservice and LLM/Agent engineering teams face three compounding chall
 
 AegisGate solves all three in a single zero-CGO binary.
 
+![AegisGate Real-Time Web Inspector & AST Contract Diff](docs/assets/dashboard-preview.png)
+
 ---
 
 ## System Architecture
