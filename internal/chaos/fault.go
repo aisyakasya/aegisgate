@@ -20,7 +20,7 @@ type Rule struct {
 	JitterLatencyMs int     `json:"jitter_latency_ms"` // uniform random additional delay [0, JitterLatencyMs]
 	FaultStatusCode int     `json:"fault_status_code"` // 0 means do not abort HTTP status; e.g. 429, 502, 503
 	FaultBody       string  `json:"fault_body,omitempty"`
-	CorruptPayload  bool    `json:"corrupt_payload"`   // if true, mutates response bytes to test client parser resilience
+	CorruptPayload  bool    `json:"corrupt_payload"` // if true, mutates response bytes to test client parser resilience
 	TriggeredCount  uint64  `json:"triggered_count"`
 }
 

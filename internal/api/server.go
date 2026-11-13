@@ -198,12 +198,12 @@ func (cp *ControlPlane) handleTraceDetail(w http.ResponseWriter, r *http.Request
 	}
 
 	writeJSON(w, http.StatusOK, map[string]any{
-		"trace":            rec,
-		"request_body":     string(reqBytes),
-		"response_body":    string(respBytes),
-		"golden_trace_id":  goldenTraceID,
-		"golden_body":      goldenBodyStr,
-		"contract_diff":    diffReport,
+		"trace":             rec,
+		"request_body":      string(reqBytes),
+		"response_body":     string(respBytes),
+		"golden_trace_id":   goldenTraceID,
+		"golden_body":       goldenBodyStr,
+		"contract_diff":     diffReport,
 		"reproducible_curl": buildCurlCommand(cp.proxyAddr, rec, reqBytes),
 	})
 }

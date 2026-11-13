@@ -24,10 +24,10 @@ import (
 
 // Config holds the runtime parameters for the AegisGate Proxy Engine.
 type Config struct {
-	TargetURL    string
-	InitialMode  storage.ProxyMode
+	TargetURL      string
+	InitialMode    storage.ProxyMode
 	ReplayFallback bool // If true, REPLAY cache misses fall back to live upstream and record
-	MaxBodyBytes int64
+	MaxBodyBytes   int64
 }
 
 // Engine coordinates reverse proxying, deterministic replay, shadow AST diffing,
@@ -40,12 +40,12 @@ type Engine struct {
 	maxBodyBytes   int64
 	httpClient     *http.Client
 
-	casStore   *cas.Store
-	walStore   *storage.WALStore
-	differ     *diff.Analyzer
-	limiter    *resilience.TokenBucketLimiter
-	breakers   *resilience.CircuitBreakerRegistry
-	chaosEng   *chaos.Engine
+	casStore *cas.Store
+	walStore *storage.WALStore
+	differ   *diff.Analyzer
+	limiter  *resilience.TokenBucketLimiter
+	breakers *resilience.CircuitBreakerRegistry
+	chaosEng *chaos.Engine
 
 	subsMu      sync.RWMutex
 	subscribers map[chan storage.TraceRecord]struct{}

@@ -21,10 +21,10 @@ const (
 
 // BreakerConfig defines the thresholds for tripping and recovering a CircuitBreaker.
 type BreakerConfig struct {
-	FailureThreshold   int           `json:"failure_threshold"`
-	SuccessThreshold   int           `json:"success_threshold"`
-	OpenCooldown       time.Duration `json:"open_cooldown_ns"`
-	MaxHalfOpenProbes  int           `json:"max_half_open_probes"`
+	FailureThreshold  int           `json:"failure_threshold"`
+	SuccessThreshold  int           `json:"success_threshold"`
+	OpenCooldown      time.Duration `json:"open_cooldown_ns"`
+	MaxHalfOpenProbes int           `json:"max_half_open_probes"`
 }
 
 // DefaultBreakerConfig returns sensible defaults for upstream service protection.
