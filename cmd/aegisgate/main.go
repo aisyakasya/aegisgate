@@ -17,6 +17,7 @@ import (
 	"github.com/aegisgate/aegisgate/internal/cas"
 	"github.com/aegisgate/aegisgate/internal/chaos"
 	"github.com/aegisgate/aegisgate/internal/diff"
+	"github.com/aegisgate/aegisgate/internal/openapi"
 	"github.com/aegisgate/aegisgate/internal/proxy"
 	"github.com/aegisgate/aegisgate/internal/resilience"
 	"github.com/aegisgate/aegisgate/internal/storage"
@@ -40,6 +41,8 @@ func main() {
 		runTraces(os.Args[2:])
 	case "diff":
 		runDiffCLI(os.Args[2:])
+	case "export-openapi":
+		runExportOpenAPI(os.Args[2:])
 	case "selftest":
 		runSelfTest(os.Args[2:])
 	case "version", "--version", "-v":
@@ -68,6 +71,7 @@ Commands:
   status      Inspect WAL latency percentiles, CAS deduplication stats, and circuit breakers
   traces      Query recorded request/response traces from the local WAL store
   diff        Run recursive JSON AST contract comparison between two trace IDs
+  export-openapi Export inferred OpenAPI 3.1 schema specification from WAL traces
   selftest    Execute end-to-end verification of Record, Replay, Chaos, and AST Drift
   version     Print binary version information
 
@@ -305,6 +309,36 @@ func runDiffCLI(args []string) {
 	if !rep.Compatible {
 		os.Exit(2)
 	}
+}
+
+func runExportOpenAPI(args []string) {
+	fs := flag.NewFlagSet("export-openapi", flag.ExitOnError)
+	dataDir := fs.String("data-dir", ".aegisgate", "Data directory")
+	title := fs.String("title", "AegisGate Inferred Spec", "OpenAPI title")
+	ver := fs.String("version", "1.0.0", "OpenAPI API version")
+	_ = fs.Parse(args)
+
+	casStore, err := cas.NewStore(*dataDir, 128)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error opening CAS store: %v\n", err)
+		os.Exit(1)
+	}
+	walStore, err := storage.NewWALStore(*dataDir, 10000, 50*time.Millisecond)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error opening WAL store: %v\n", err)
+		os.Exit(1)
+	}
+	defer walStore.Close()
+
+	traces := walStore.Query(storage.QueryFilter{Limit: 500})
+	spec, err := openapi.InferSpecFromTraces(traces, casStore, *title, *ver)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to infer OpenAPI spec: %v\n", err)
+		os.Exit(1)
+	}
+
+	out, _ := json.MarshalIndent(spec, "", "  ")
+	fmt.Println(string(out))
 }
 
 func runSelfTest(args []string) {

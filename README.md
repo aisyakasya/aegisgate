@@ -140,7 +140,7 @@ Run `make bench` (`go test -bench=. -benchmem ./internal/...`) to reproduce:
 
 ## Roadmap & Active Engineering Backlog
 
-- [ ] **OpenAPI 3.1 Specification Inference & Export:** Automatically synthesize an OpenAPI 3.1 YAML specification from recorded golden traces in the WAL.
+- [x] **OpenAPI 3.1 Specification Inference & Export:** Automatically synthesize an OpenAPI 3.1 YAML/JSON specification from recorded golden traces in the WAL via `aegisgate export-openapi`.
 - [ ] **SSE Streaming Token Replay (`text/event-stream`):** Record inter-chunk token arrival timestamps for streaming LLM responses (`stream: true`) and replay them with faithful inter-token pacing.
 - [ ] **HAR 1.2 Import / Export:** Import browser/Playwright `.har` archives directly into the CAS + WAL store for offline CI replay.
 - [ ] **PII & Secret Redaction Pipeline:** Configurable regex and entropy-based scrubbing for `Authorization` headers, API keys, and credit card numbers prior to CAS persistence.
