@@ -6,7 +6,7 @@
 *.dylib
 bin/
 dist/
-aegisgate
+/aegisgate
 
 # Test binary, built with `go test -c`
 *.test
